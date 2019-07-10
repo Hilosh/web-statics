@@ -1,4 +1,6 @@
 # web-statics
 web of searching movies in database
+
+Visualization of movie information through rotatable sphere nodes
 ## Usage
-open /movies/main.html
+open /movie/main.html
