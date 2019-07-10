@@ -1,0 +1,207 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <script src = "jquery-3.4.1.min.js"> </script>
+    <link href="MainStyle.css" rel="stylesheet"/>
+    <link href="CheckBox.css" rel="stylesheet"/>
+    <title>电影星空图</title>
+    <script>
+
+        $(document).ready(function () {
+            var map = {
+                actor_one:true,
+                actor_two:true,
+                author:true,
+                country:true,
+                director:true,
+                genre:true,
+                rating:true,
+                ratingsum:true,
+                year:true
+            };
+            $("#search-btn").click(function () {
+                var movieid = $("input[id = 'search-txt']").val();
+                $("input[id = 'search-txt']").val("");
+                $.each(map,function (key,values) {
+                    if (values) {
+                        movieid += "=0";
+                    } else movieid += "=1";
+                })
+                movieid += "=0=0";
+                console.log(movieid);
+                $(location).attr("href", "MapWindow.html?value="+movieid);
+            });
+
+            $(".tag").click(function () {
+               var temp = $(this).children("a").attr("id");
+               $.each(map,function (key,values) {
+                  // console.log(key);
+                   if (temp == key.toString()) {
+                       if (values) {
+                           map[key] = false;
+                           $("#" + temp).css({
+                               background: "#ffffff",
+                               color: "#060e1b"
+                           });
+                       } else {
+                           $("#" + temp).css({
+                               background: "#060e1b",
+                               color: "#ffffff"
+                           });
+                           map[key] = true;
+                       }
+                   }
+               });
+            });
+        });
+    </script>
+
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    "use strict";
+    var canvas = document.getElementById('canvas'),
+        ctx = canvas.getContext('2d'),
+        w = canvas.width = window.innerWidth,
+        h = canvas.height = window.innerHeight,
+        hue = 217,
+        stars = [],
+        count = 0,
+        maxStars = 1200;
+    var canvas2 = document.createElement('canvas'), //创建画布对象
+        ctx2 = canvas2.getContext('2d'); // 二维
+    canvas2.width = 100;
+    canvas2.height = 100;
+    var half = canvas2.width / 2,
+        gradient2 = ctx2.createRadialGradient(half, half, 0, half, half, half);
+    gradient2.addColorStop(0.025, '#fff');
+    gradient2.addColorStop(0.1, 'hsl(' + hue + ', 61%, 33%)');
+    gradient2.addColorStop(0.25, 'hsl(' + hue + ', 64%, 6%)');
+    gradient2.addColorStop(1, 'transparent');
+    ctx2.fillStyle = gradient2;
+    ctx2.beginPath();
+    ctx2.arc(half, half, half, 0, Math.PI * 2);
+    ctx2.fill();
+    function random(min, max) {
+        if (arguments.length < 2) {
+            max = min;
+            min = 0;
+        }
+        if (min > max) {
+            var hold = max;
+            max = min;
+            min = hold;
+        }
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function maxOrbit(x, y) {
+        var max = Math.max(x, y),
+            diameter = Math.round(Math.sqrt(max * max + max * max));
+        return diameter / 2;
+    }
+    var Star = function() {
+        this.orbitRadius = random(maxOrbit(w, h));
+        this.radius = random(60, this.orbitRadius) / 12;
+        this.orbitX = w / 2;
+        this.orbitY = h / 2;
+        this.timePassed = random(0, maxStars);
+        this.speed = random(this.orbitRadius) / 900000;
+        this.alpha = random(2, 10) / 10;
+        count++;
+        stars[count] = this;
+    }
+    Star.prototype.draw = function() {
+        var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
+            y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
+            twinkle = random(10);
+        if (twinkle === 1 && this.alpha > 0) {
+            this.alpha -= 0.05;
+        } else if (twinkle === 2 && this.alpha < 1) {
+            this.alpha += 0.05;
+        }
+        ctx.globalAlpha = this.alpha;
+        ctx.drawImage(canvas2, x - this.radius / 2, y - this.radius / 2, this.radius, this.radius);
+        this.timePassed += this.speed;
+    }
+    for (var i = 0; i < maxStars; i++) {
+        new Star();
+    }
+    function animation() {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = 'hsla(' + hue + ', 64%, 6%, 1)';
+        ctx.fillRect(0, 0, w, h)
+        ctx.globalCompositeOperation = 'lighter';
+        for (var i = 1, l = stars.length; i < l; i++) {
+            stars[i].draw();
+        };
+        window.requestAnimationFrame(animation);
+    }
+    animation();
+</script>
+
+<section class="checkbox">
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-user-ninja" id = "actor_one"></a>
+        <input class="tag_text" type="text" id = "text_actor_one" disabled="disabled"  value="演员一">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-user-secret" id = "actor_two"></a>
+        <input class="tag_text" type="text" id = "text_actor_two" disabled="disabled"  value="演员二">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-user-graduate" id = "author"></a>
+        <input class="tag_text" type="text" id = "text_author" disabled="disabled"  value="原作者">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-globe-americas" id = "country"></a>
+        <input class="tag_text" type="text" id = "text_country" disabled="disabled"  value="地区">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-user-tie" id = "director"></a>
+        <input class="tag_text" type="text" id = "text_director" disabled="disabled"  value="导演">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-sitemap" id = "genre"></a>
+        <input class="tag_text" type="text" id = "text_genre" disabled="disabled"  value="类型">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-heartbeat" id = "rating"></a>
+        <input class="tag_text" type="text" id = "text_rating" disabled="disabled"  value="评分">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-fire-alt" id = "ratingsum"></a>
+        <input class="tag_text" type="text" id = "text_ratingsum" disabled="disabled"  value="热度">
+    </div>
+    <div class = "tag">
+        <a href="#" class="iconbtn fas fa-calendar-alt" id = "year"></a>
+        <input class="tag_text" type="text" id = "text_year" disabled="disabled"  value="年份">
+    </div>
+</section>
+
+<div class="search-box" id = "search-box">
+    <input class="search-txt" type="text" id = "search-txt" placeholder="Type MovieId to search"/>
+    <a class="search-btn" href="#" id = "search-btn">
+        <i class="fas fa-search" id = "search-icon"></i>
+    </a>
+</div>
+
+<h1 class = "bigtitle">
+    <span id="l">电</span>影<span id ='x'>星空图</span>
+</h1>
+<div class = "pos">
+    <a class="title-btn" id = "title-btn">
+        <i class="fas fa-binoculars icon"></i>
+        <span class = "title1">    Movie</span>
+        <span class = "title2">   STELLAR </span>
+        <span class = "title3">MAP</span>
+    </a>
+</div>
+</body>
+</html>

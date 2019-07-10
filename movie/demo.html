@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="jquery-3.4.0.js"></script>
+    <script src="jquery.csv.min.js"></script>
+    <title>HTML5 Canvas网页背景动画特效</title>
+    <style>
+        #back-btn {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;
+            z-index: 110;
+        }
+
+        .back-icon{
+            font-size:40px;
+            color:#313131;
+            transition: 1s;
+        }
+
+        .back-btn:hover > .back-icon {
+            color:white;
+            transform: rotate(-360deg);
+            -webkit-transform: rotate(-360deg);
+            -moz-transform: rotate(-360deg);
+            -o-transform: rotate(-360deg);
+            -ms-transform: rotate(-360deg);
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+           $("#back-box").click(function () {
+               $(location).attr("href", "MapWindow.html?"+last);
+           });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="container" style="height:900%" ></div>
+    <!-- <div id="zoneOfStackedArea" style="width: 1200px;height:800px;"position:relative></div> -->
+    <script type="text/javascript" src="echarts.js"></script>
+    <script type="text/javascript" src="https://echarts.baidu.com/dist/echarts-gl.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+    <script type="text/javascript" src="dataTool.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+    <script type="text/javascript" src="bmap.min.js"></script>
+    <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+    <script src="data.js"></script>
+    <!-- <script src="data1.js"></script> -->
+</body>
+
+<div class = "back-box" id = "back-box">
+    <a class = "back-btn" href = "main.html" id = "back-btn">
+        <i class="fas fa-chevron-circle-left back-icon"></i>
+    </a>
+</div>
+</html>

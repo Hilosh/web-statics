@@ -1,0 +1,1041 @@
+<html>
+<head>
+<script type="text/javascript" src="js/echarts.js"></script>
+<script src="jquery-3.4.0.js"></script>
+<script src="jquery.csv.min.js"></script>
+</head>
+<body>
+    <script>
+        let movieData = [];
+    $.ajax({
+        type: "GET",
+        async: false,
+        url: "movies2.csv",
+        dataType: "text",
+        success: function (data) {
+            // split every line, every field
+            let lineArray = data.split('\r\n');
+            for (let i = 1; i < lineArray.length; i++){ // 去除首行，因为它是名称
+                let line = $.csv.toArray(lineArray[i]);
+                if (line.length == 7 ){ // 排除最后一个空行 或者数据格式有误的
+                    movieData.push(line); // [id,name,year,rating,ratingsum,genre,country]
+                }
+            }
+        }
+    });
+    //统计某一年某个国家的电影总数
+    let countObj = {};
+    $.each(movieData, (i, item)=>{
+        let s1 = item[2]; // year
+        let s2 = item[7]; // country
+        if (countObj == undefined){
+            countObj = {};
+        }
+        if (countObj[s1] == undefined){
+            countObj[s1] = {};
+        }
+        if (countObj[s1][s2] == undefined){
+            countObj[s1][s2] = 0;
+        }
+        countObj[s1][s2] += 1;
+    });
+    let countArray = [];
+    var movienum =new Array(300).fill(0);
+    for(var i=0;i<movieData.length;i++)
+        {
+            let s1 = movieData[i][2]; // year
+            let s2 = movieData[i][6]; // country
+            let LineArray=s2.split("/");
+            for(let j=0;j<LineArray.length;j++){
+            countArray.push(LineArray[j]);
+            }
+        }
+        for(var i=0;i<countArray.length;i++)
+        {
+            // document.write(countArray[i]);
+            // document.write("   ");
+            if(countArray[i]=="安道尔共和国")
+                {
+                    movienum[0]+=1;
+                }
+                else if(countArray[i]=="阿拉伯")
+                {
+                    movienum[1]+=1;
+                }
+                else if(countArray[i]=="阿富汗")
+                {
+                    movienum[2]+=1;
+                }
+                else if(countArray[i]=="安提瓜和巴布达")
+                {
+                    movienum[3]+=1;
+                }
+                else if(countArray[i]=="安圭拉")
+                {
+                    movienum[4]+=1;
+                }
+                else if(countArray[i]=="阿尔巴尼亚")
+                {
+                    movienum[5]+=1;
+                }
+                else if(countArray[i]=="亚美尼亚")
+                {
+                    movienum[6]+=1;
+                }
+                else if(countArray[i]=="拉丁美洲群岛")
+                {
+                    movienum[7]+=1;
+                }
+                else if(countArray[i]=="安哥拉")
+                {
+                    movienum[8]+=1;
+                }
+                else if(countArray[i]=="南极洲")
+                {
+                    movienum[9]+=1;
+                }
+                else if(countArray[i]=="阿根廷")
+                {
+                    movienum[10]+=1;
+                }
+                else if(countArray[i]=="萨摩亚")
+                {
+                    movienum[11]+=1;
+                }
+                else if(countArray[i]=="奥地利")
+                {
+                    movienum[12]+=1;
+                }
+                else if(countArray[i]=="澳大利亚")
+                {
+                    movienum[13]+=1;
+                }
+                else if(countArray[i]=="阿鲁巴")
+                {
+                    movienum[14]+=1;
+                }
+                else if(countArray[i]=="阿塞拜疆")
+                {
+                    movienum[15]+=1;
+                }
+                else if(countArray[i]=="波黑")
+                {
+                    movienum[16]+=1;
+                }
+                else if(countArray[i]=="巴巴多斯")
+                {
+                    movienum[17]+=1;
+                }
+                else if(countArray[i]=="孟加拉")
+                {
+                    movienum[18]+=1;
+                }
+                else if(countArray[i]=="比利时")
+                {
+                    movienum[19]+=1;
+                }
+                else if(countArray[i]=="布基纳法索")
+                {
+                    movienum[20]+=1;
+                }
+                else if(countArray[i]=="保加利亚")
+                {
+                    movienum[21]+=1;
+                }
+                else if(countArray[i]=="巴林")
+                {
+                    movienum[22]+=1;
+                }
+                else if(countArray[i]=="巴隆迪")
+                {
+                    movienum[23]+=1;
+                }
+                else if(countArray[i]=="贝宁")
+                {
+                    movienum[24]+=1;
+                }
+                else if(countArray[i]=="百慕大")
+                {
+                    movienum[25]+=1;
+                }
+                else if(countArray[i]=="文莱")
+                {
+                    movienum[26]+=1;
+                }
+                else if(countArray[i]=="玻利维亚")
+                {
+                    movienum[27]+=1;
+                }
+                else if(countArray[i]=="巴西")
+                {
+                    movienum[28]+=1;
+                }
+                else if(countArray[i]=="巴哈马")
+                {
+                    movienum[29]+=1;
+                }
+                else if(countArray[i]=="不丹")
+                {
+                    movienum[30]+=1;
+                }
+                else if(countArray[i]=="布维岛")
+                {
+                    movienum[31]+=1;
+                }
+                else if(countArray[i]=="博茨瓦纳")
+                {
+                    movienum[32]+=1;
+                }
+                else if(countArray[i]=="白罗斯")
+                {
+                    movienum[33]+=1;
+                }
+                else if(countArray[i]=="伯利兹城")
+                {
+                    movienum[34]+=1;
+                }
+                else if(countArray[i]=="加拿大")
+                {
+                    movienum[35]+=1;
+                }
+                else if(countArray[i]=="科科斯基林群岛")
+                {
+                    movienum[36]+=1;
+                }
+                else if(countArray[i]=="刚果")
+                {
+                    movienum[37]+=1;
+                }
+                else if(countArray[i]=="中非"||countArray[i]=="中非共和国")
+                {
+                    movienum[38]+=1;
+                }
+                else if(countArray[i]=="刚果")
+                {
+                    movienum[39]+=1;
+                }
+                else if(countArray[i]=="瑞士")
+                {
+                    movienum[40]+=1;
+                }
+                else if(countArray[i]=="科特迪瓦")
+                {
+                    movienum[41]+=1;
+                }
+                else if(countArray[i]=="库克群岛")
+                {
+                    movienum[42]+=1;
+                }
+                else if(countArray[i]=="智利")
+                {
+                    movienum[43]+=1;
+                }
+                else if(countArray[i]=="喀麦隆")
+                {
+                    movienum[44]+=1;
+                }
+                else if(countArray[i]=="中国"||countArray[i]=="中国大陆")
+                {
+                    movienum[45]+=1;
+                }
+                else if(countArray[i]=="哥伦比亚")
+                {
+                    movienum[46]+=1;
+                }
+                else if(countArray[i]=="哥斯达黎加")
+                {
+                    movienum[47]+=1;
+                }
+                else if(countArray[i]=="古巴")
+                {
+                    movienum[48]+=1;
+                }
+                else if(countArray[i]=="佛得角")
+                {
+                    movienum[49]+=1;
+                }
+                else if(countArray[i]=="圣延岛")
+                {
+                    movienum[50]+=1;
+                }
+                else if(countArray[i]=="塞浦路斯")
+                {
+                    movienum[51]+=1;
+                }
+                else if(countArray[i]=="捷克共和国")
+                {
+                    movienum[52]+=1;
+                }
+                else if(countArray[i]=="德国")
+                {
+                    movienum[53]+=1;
+                }
+                else if(countArray[i]=="吉布提")
+                {
+                    movienum[54]+=1;
+                }
+                else if(countArray[i]=="丹麦")
+                {
+                    movienum[55]+=1;
+                }
+                else if(countArray[i]=="多米尼加岛")
+                {
+                    movienum[56]+=1;
+                }
+                else if(countArray[i]=="多米尼加共和国")
+                {
+                    movienum[57]+=1;
+                }
+                else if(countArray[i]=="阿尔及利亚")
+                {
+                    movienum[58]+=1;
+                }
+                else if(countArray[i]=="厄瓜多尔")
+                {
+                    movienum[59]+=1;
+                }
+                else if(countArray[i]=="爱沙尼亚")
+                {
+                    movienum[60]+=1;
+                }
+                else if(countArray[i]=="埃及")
+                {
+                    movienum[61]+=1;
+                }
+                else if(countArray[i]=="西撒哈拉")
+                {
+                    movienum[62]+=1;
+                }
+                else if(countArray[i]=="厄立特里亚")
+                {
+                    movienum[63]+=1;
+                }
+                else if(countArray[i]=="西班牙")
+                {
+                    movienum[64]+=1;
+                }
+                else if(countArray[i]=="埃塞俄比亚")
+                {
+                    movienum[65]+=1;
+                }
+                else if(countArray[i]=="芬兰")
+                {
+                    movienum[66]+=1;
+                }
+                else if(countArray[i]=="斐济")
+                {
+                    movienum[67]+=1;
+                }
+                else if(countArray[i]=="福克兰群岛")
+                {
+                    movienum[68]+=1;
+                }
+                else if(countArray[i]=="密克罗尼西亚")
+                {
+                    movienum[69]+=1;
+                }
+                else if(countArray[i]=="法罗群岛")
+                {
+                    movienum[70]+=1;
+                }
+                else if(countArray[i]=="法国")
+                {
+                    movienum[71]+=1;
+                }
+                else if(countArray[i]=="加蓬")
+                {
+                    movienum[72]+=1;
+                }
+                else if(countArray[i]=="英国")
+                {
+                    movienum[73]+=1;
+                }
+                else if(countArray[i]=="格林纳达")
+                {
+                    movienum[74]+=1;
+                }
+                else if(countArray[i]=="格鲁吉亚")
+                {
+                    movienum[75]+=1;
+                }
+                else if(countArray[i]=="法属圭亚那")
+                {
+                    movienum[76]+=1;
+                }
+                else if(countArray[i]=="根西")
+                {
+                    movienum[77]+=1;
+                }
+                else if(countArray[i]=="加纳")
+                {
+                    movienum[78]+=1;
+                }
+                else if(countArray[i]=="直布罗陀")
+                {
+                    movienum[79]+=1;
+                }
+                else if(countArray[i]=="格陵兰")
+                {
+                    movienum[80]+=1;
+                }
+                else if(countArray[i]=="冈比亚")
+                {
+                    movienum[81]+=1;
+                }
+                else if(countArray[i]=="基尼"||countArray[i]=="几内亚")
+                {
+                    movienum[82]+=1;
+                }
+                else if(countArray[i]=="瓜德罗普岛")
+                {
+                    movienum[83]+=1;
+                }
+                else if(countArray[i]=="赤道几内亚")
+                {
+                    movienum[84]+=1;
+                }
+                else if(countArray[i]=="希腊")
+                {
+                    movienum[85]+=1;
+                }
+                else if(countArray[i]=="南乔治亚和南桑威奇群岛")
+                {
+                    movienum[86]+=1;
+                }
+                else if(countArray[i]=="危地马拉")
+                {
+                    movienum[87]+=1;
+                }
+                else if(countArray[i]=="关岛")
+                {
+                    movienum[88]+=1;
+                }
+                else if(countArray[i]=="几内亚比绍")
+                {
+                    movienum[89]+=1;
+                }
+                else if(countArray[i]=="圭亚那")
+                {
+                    movienum[90]+=1;
+                }
+                else if(countArray[i]=="加沙")
+                {
+                    movienum[91]+=1;
+                }
+                else if(countArray[i]=="香港")
+                {
+                    movienum[92]+=1;
+                }
+                else if(countArray[i]=="赫德岛和麦克唐纳群岛")
+                {
+                    movienum[93]+=1;
+                }
+                else if(countArray[i]=="洪都拉斯")
+                {
+                    movienum[94]+=1;
+                }
+                else if(countArray[i]=="克罗地亚")
+                {
+                    movienum[95]+=1;
+                }
+                else if(countArray[i]=="海地")
+                {
+                    movienum[96]+=1;
+                }
+                else if(countArray[i]=="匈牙利")
+                {
+                    movienum[97]+=1;
+                }
+                else if(countArray[i]=="印尼"||countArray[i]=="印度尼西亚")
+                {
+                    movienum[98]+=1;
+                }
+                else if(countArray[i]=="爱尔兰")
+                {
+                    movienum[99]+=1;
+                }
+                else if(countArray[i]=="以色列")
+                {
+                    movienum[100]+=1;
+                }
+                else if(countArray[i]=="曼岛")
+                {
+                    movienum[101]+=1;
+                }
+                else if(countArray[i]=="印度")
+                {
+                    movienum[102]+=1;
+                }
+                else if(countArray[i]=="英属印度洋领地")
+                {
+                    movienum[103]+=1;
+                }
+                else if(countArray[i]=="伊拉克")
+                {
+                    movienum[104]+=1;
+                }
+                else if(countArray[i]=="伊朗")
+                {
+                    movienum[105]+=1;
+                }
+                else if(countArray[i]=="冰岛")
+                {
+                    movienum[106]+=1;
+                }
+                else if(countArray[i]=="意大利")
+                {
+                    movienum[107]+=1;
+                }
+                else if(countArray[i]=="泽西")
+                {
+                    movienum[108]+=1;
+                }
+                else if(countArray[i]=="牙买加")
+                {
+                    movienum[109]+=1;
+                }
+                else if(countArray[i]=="约旦")
+                {
+                    movienum[110]+=1;
+                }
+                else if(countArray[i]=="日本")
+                {
+                    movienum[111]+=1;
+                }
+                else if(countArray[i]=="肯尼亚")
+                {
+                    movienum[112]+=1;
+                }
+                else if(countArray[i]=="吉尔吉斯斯坦")
+                {
+                    movienum[113]+=1;
+                }
+                else if(countArray[i]=="柬埔寨")
+                {
+                    movienum[114]+=1;
+                }
+                else if(countArray[i]=="基里巴斯")
+                {
+                    movienum[115]+=1;
+                }
+                else if(countArray[i]=="科摩罗")
+                {
+                    movienum[116]+=1;
+                }
+                else if(countArray[i]=="圣基茨和尼维斯")
+                {
+                    movienum[117]+=1;
+                }
+                else if(countArray[i]=="朝鲜")
+                {
+                    movienum[118]+=1;
+                }
+                else if(countArray[i]=="韩国")
+                {
+                    movienum[119]+=1;
+                }
+                else if(countArray[i]=="科威特")
+                {
+                    movienum[120]+=1;
+                }
+                else if(countArray[i]=="开曼群岛")
+                {
+                    movienum[121]+=1;
+                }
+                else if(countArray[i]=="哈萨克斯坦")
+                {
+                    movienum[122]+=1;
+                }
+                else if(countArray[i]=="老挝")
+                {
+                    movienum[123]+=1;
+                }
+                else if(countArray[i]=="黎巴嫩")
+                {
+                    movienum[124]+=1;
+                }
+                else if(countArray[i]=="圣卢西亚岛")
+                {
+                    movienum[125]+=1;
+                }
+                else if(countArray[i]=="列支敦斯登列支敦斯登")
+                {
+                    movienum[126]+=1;
+                }
+                else if(countArray[i]=="斯里兰卡")
+                {
+                    movienum[127]+=1;
+                }
+                else if(countArray[i]=="利比里亚")
+                {
+                    movienum[128]+=1;
+                }
+                else if(countArray[i]=="莱索托")
+                {
+                    movienum[129]+=1;
+                }
+                else if(countArray[i]=="立陶宛")
+                {
+                    movienum[130]+=1;
+                }
+                else if(countArray[i]=="卢森堡")
+                {
+                    movienum[131]+=1;
+                }
+                else if(countArray[i]=="拉脱维亚")
+                {
+                    movienum[132]+=1;
+                }
+                else if(countArray[i]=="利比亚")
+                {
+                    movienum[133]+=1;
+                }
+                else if(countArray[i]=="利比亚")
+                {
+                    movienum[134]+=1;
+                }
+                else if(countArray[i]=="摩纳哥")
+                {
+                    movienum[135]+=1;
+                }
+                else if(countArray[i]=="摩尔多瓦")
+                {
+                    movienum[136]+=1;
+                }
+                else if(countArray[i]=="黑山共和国")
+                {
+                    movienum[137]+=1;
+                }
+                else if(countArray[i]=="马达加斯加")
+                {
+                    movienum[138]+=1;
+                }
+                else if(countArray[i]=="马绍尔群岛")
+                {
+                    movienum[139]+=1;
+                }
+                else if(countArray[i]=="马其顿")
+                {
+                    movienum[140]+=1;
+                }
+                else if(countArray[i]=="马里")
+                {
+                    movienum[141]+=1;
+                }
+                else if(countArray[i]=="缅甸")
+                {
+                    movienum[142]+=1;
+                }
+                else if(countArray[i]=="蒙古")
+                {
+                    movienum[143]+=1;
+                }
+                else if(countArray[i]=="澳门")
+                {
+                    movienum[144]+=1;
+                }
+                else if(countArray[i]=="北马里亚纳")
+                {
+                    movienum[145]+=1;
+                }
+                else if(countArray[i]=="马提尼克")
+                {
+                    movienum[146]+=1;
+                }
+                else if(countArray[i]=="毛里塔尼亚")
+                {
+                    movienum[147]+=1;
+                }
+                else if(countArray[i]=="蒙特色拉特岛")
+                {
+                    movienum[148]+=1;
+                }
+                else if(countArray[i]=="马尔他")
+                {
+                    movienum[149]+=1;
+                }
+                else if(countArray[i]=="毛里求斯")
+                {
+                    movienum[150]+=1;
+                }
+                else if(countArray[i]=="马尔代夫")
+                {
+                    movienum[151]+=1;
+                }
+                else if(countArray[i]=="马拉维")
+                {
+                    movienum[152]+=1;
+                }
+                else if(countArray[i]=="墨西哥")
+                {
+                    movienum[153]+=1;
+                }
+                else if(countArray[i]=="马来西亚")
+                {
+                    movienum[154]+=1;
+                }
+                else if(countArray[i]=="莫桑比克")
+                {
+                    movienum[155]+=1;
+                }
+                else if(countArray[i]=="纳米比亚")
+                {
+                    movienum[156]+=1;
+                }
+                else if(countArray[i]=="新喀里多尼亚")
+                {
+                    movienum[157]+=1;
+                }
+                else if(countArray[i]=="尼日尔")
+                {
+                    movienum[158]+=1;
+                }
+                else if(countArray[i]=="诺福克岛")
+                {
+                    movienum[159]+=1;
+                }
+                else if(countArray[i]=="尼日利亚")
+                {
+                    movienum[160]+=1;
+                }
+                else if(countArray[i]=="尼加拉瓜")
+                {
+                    movienum[161]+=1;
+                }
+                else if(countArray[i]=="荷兰")
+                {
+                    movienum[162]+=1;
+                }
+                else if(countArray[i]=="挪威")
+                {
+                    movienum[163]+=1;
+                }
+                else if(countArray[i]=="尼泊尔")
+                {
+                    movienum[164]+=1;
+                }
+                else if(countArray[i]=="瑙鲁")
+                {
+                    movienum[165]+=1;
+                }
+                else if(countArray[i]=="纽埃")
+                {
+                    movienum[166]+=1;
+                }
+                else if(countArray[i]=="新西兰")
+                {
+                    movienum[167]+=1;
+                }
+                else if(countArray[i]=="阿曼")
+                {
+                    movienum[168]+=1;
+                }
+                else if(countArray[i]=="巴拿马")
+                {
+                    movienum[169]+=1;
+                }
+                else if(countArray[i]=="秘鲁")
+                {
+                    movienum[170]+=1;
+                }
+                else if(countArray[i]=="玻里尼西亚")
+                {
+                    movienum[171]+=1;
+                }
+                else if(countArray[i]=="巴布亚新几内亚")
+                {
+                    movienum[172]+=1;
+                }
+                else if(countArray[i]=="菲律宾")
+                {
+                    movienum[173]+=1;
+                }
+                else if(countArray[i]=="巴基斯坦")
+                {
+                    movienum[174]+=1;
+                }
+                else if(countArray[i]=="波兰")
+                {
+                    movienum[175]+=1;
+                }
+                else if(countArray[i]=="圣皮埃尔和密克隆群岛")
+                {
+                    movienum[176]+=1;
+                }
+                else if(countArray[i]=="皮特凯恩群岛")
+                {
+                    movienum[177]+=1;
+                }
+                else if(countArray[i]=="波多黎各")
+                {
+                    movienum[178]+=1;
+                }
+                else if(countArray[i]=="巴勒斯坦")
+                {
+                    movienum[179]+=1;
+                }
+                else if(countArray[i]=="葡萄牙")
+                {
+                    movienum[180]+=1;
+                }
+                else if(countArray[i]=="帕劳")
+                {
+                    movienum[181]+=1;
+                }
+                else if(countArray[i]=="巴拉圭")
+                {
+                    movienum[182]+=1;
+                }
+                else if(countArray[i]=="卡塔尔")
+                {
+                    movienum[183]+=1;
+                }
+                else if(countArray[i]=="留尼旺")
+                {
+                    movienum[184]+=1;
+                }
+                else if(countArray[i]=="罗马尼亚")
+                {
+                    movienum[185]+=1;
+                }
+                else if(countArray[i]=="塞尔维亚")
+                {
+                    movienum[186]+=1;
+                }
+                else if(countArray[i]=="俄罗斯")
+                {
+                    movienum[187]+=1;
+                }
+                else if(countArray[i]=="卢旺达")
+                {
+                    movienum[188]+=1;
+                }
+                else if(countArray[i]=="沙特阿拉伯")
+                {
+                    movienum[189]+=1;
+                }
+                else if(countArray[i]=="所罗门")
+                {
+                    movienum[190]+=1;
+                }
+                else if(countArray[i]=="塞舌尔")
+                {
+                    movienum[191]+=1;
+                }
+                else if(countArray[i]=="苏丹")
+                {
+                    movienum[192]+=1;
+                }
+                else if(countArray[i]=="瑞典")
+                {
+                    movienum[193]+=1;
+                }
+                else if(countArray[i]=="新加坡")
+                {
+                    movienum[194]+=1;
+                }
+                else if(countArray[i]=="圣赫勒拿")
+                {
+                    movienum[195]+=1;
+                }
+                else if(countArray[i]=="斯洛文尼亚")
+                {
+                    movienum[196]+=1;
+                }
+                else if(countArray[i]=="斯瓦尔巴和扬马延")
+                {
+                    movienum[197]+=1;
+                }
+                else if(countArray[i]=="斯洛伐克")
+                {
+                    movienum[198]+=1;
+                }
+                else if(countArray[i]=="塞拉利昂")
+                {
+                    movienum[199]+=1;
+                }
+                else if(countArray[i]=="圣马力诺")
+                {
+                    movienum[200]+=1;
+                }
+                else if(countArray[i]=="塞内加尔")
+                {
+                    movienum[201]+=1;
+                }
+                else if(countArray[i]=="索马里")
+                {   
+                    movienum[202]+=1;
+                }
+                else if(countArray[i]=="苏里南")
+                {
+                    movienum[203]+=1;
+                }
+                else if(countArray[i]=="普林西比")
+                {
+                    movienum[204]+=1;
+                }
+                else if(countArray[i]=="萨尔瓦多")
+                {
+                    movienum[205]+=1;
+                }
+                else if(countArray[i]=="叙利亚")
+                {
+                    movienum[206]+=1;
+                }
+                else if(countArray[i]=="斯威士兰")
+                {
+                    movienum[207]+=1;
+                }
+                else if(countArray[i]=="特克斯科斯群岛")
+                {
+                    movienum[208]+=1;
+                }
+                else if(countArray[i]=="乍得")
+                {
+                    movienum[209]+=1;
+                }
+                else if(countArray[i]=="法国")
+                {
+                    movienum[210]+=1;
+                }
+                else if(countArray[i]=="多哥")
+                {
+                    movienum[211]+=1;
+                }
+                else if(countArray[i]=="泰国")
+                {
+                    movienum[212]+=1;
+                }
+                else if(countArray[i]=="塔吉克斯坦")
+                {
+                    movienum[213]+=1;
+                }
+                else if(countArray[i]=="托克劳")
+                {
+                    movienum[214]+=1;
+                }
+                else if(countArray[i]=="东帝汶")
+                {
+                    movienum[215]+=1;
+                }
+                else if(countArray[i]=="土库曼斯坦")
+                {
+                    movienum[216]+=1;
+                }
+                else if(countArray[i]=="突尼斯")
+                {
+                    movienum[217]+=1;
+                }
+                else if(countArray[i]=="汤加")
+                {
+                    movienum[218]+=1;
+                }
+                else if(countArray[i]=="土耳其")
+                {
+                    movienum[219]+=1;
+                }
+                else if(countArray[i]=="特立尼达和多巴哥")
+                {
+                    movienum[220]+=1;
+                }
+                else if(countArray[i]=="图瓦卢")
+                {
+                    movienum[221]+=1;
+                }
+                else if(countArray[i]=="台湾")
+                {
+                    movienum[222]+=1;
+                }
+                else if(countArray[i]=="坦桑尼亚")
+                {
+                    movienum[223]+=1;
+                }
+                else if(countArray[i]=="乌克兰")
+                {
+                    movienum[224]+=1;
+                }
+                else if(countArray[i]=="乌干达")
+                {
+                    movienum[225]+=1;
+                }
+                else if(countArray[i]=="美国")
+                {
+                    movienum[226]+=1;
+                }
+                else if(countArray[i]=="乌拉圭")
+                {
+                    movienum[227]+=1;
+                }
+                else if(countArray[i]=="乌兹别克斯坦")
+                {
+                    movienum[228]+=1;
+                }
+                else if(countArray[i]=="梵蒂冈")
+                {
+                    movienum[229]+=1;
+                }
+                else if(countArray[i]=="圣文森特")
+                {
+                    movienum[230]+=1;
+                }
+                else if(countArray[i]=="委内瑞拉")
+                {
+                    movienum[231]+=1;
+                }
+                else if(countArray[i]=="维尔京")
+                {
+                    movienum[232]+=1;
+                }
+                else if(countArray[i]=="维尔京")
+                {
+                    movienum[233]+=1;
+                }
+                else if(countArray[i]=="越南")
+                {
+                    movienum[234]+=1;
+                }
+                else if(countArray[i]=="瓦努阿图")
+                {
+                    movienum[235]+=1;
+                }
+                else if(countArray[i]=="瓦利斯群岛和富图纳群岛")
+                {
+                    movienum[236]+=1;
+                }
+                else if(countArray[i]=="萨摩亚")
+                {
+                    movienum[237]+=1;
+                }
+                else if(countArray[i]=="科索沃")
+                {
+                    movienum[238]+=1;
+                }
+                else if(countArray[i]=="也门")
+                {
+                    movienum[239]+=1;
+                }
+                else if(countArray[i]=="马约特岛")
+                {
+                    movienum[240]+=1;
+                }
+                else if(countArray[i]=="南非")
+                {
+                    movienum[241]+=1;
+                }
+                else if(countArray[i]=="赞比亚")
+                {
+                    movienum[242]+=1;
+                }
+                else if(countArray[i]=="津巴布韦")
+                {
+                    movienum[243]+=1;
+                }
+        }
+        for(var i=0;i<movienum.length;i++)
+        {
+            document.write(movienum[i]);
+            document.write("     ");
+        }
+        </script>
+        </body>
+</html>

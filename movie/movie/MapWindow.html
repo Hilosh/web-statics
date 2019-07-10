@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Awesome search Box</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous"/>
+    <link href="styleHistory.css" rel="stylesheet"/>
+    <link href="CheckBoxInMap.css" rel="stylesheet"/>
+    <link href="TopmovieAndButton.css" rel="stylesheet"/>
+    <script src = "jquery-3.4.1.min.js"> </script>
+    <script src="drawstarmap.js"></script>
+    <script>
+        var map = {
+            "movie_id":"",
+            "actor_one":"",
+            "actor_two":"",
+            "author":"",
+            "country":"",
+            "director":"",
+            "genre":"",
+            "rating":"",
+            "ratingsum":"",
+            "year":""
+        };
+
+        var idname;
+        var classname;
+        var tagortext = false;
+        var tagordetail = false;
+        var movie1;
+        var movie2;
+        var movie3;
+        var movie4;
+
+        function getnewhtml() {
+            var movieid = "";
+            $.each(map,function (key,values) {
+               movieid += map[key] + "=";
+            });
+            if (tagortext)
+                movieid += "1=";
+            else
+                movieid += "0=";
+            if (tagordetail)
+                movieid += "1";
+            else
+                movieid += "0";
+            console.log(movieid);
+            $(location).attr("href", "MapWindow.html?value="+movieid);
+        }
+
+        function getActorId(key) {
+            var search_url = "http://hilosh.xyz:19090/person/selectPersonById";
+            var dataParam = {
+                "id":key
+            };
+            var moviedata;
+            $.post({
+                url: search_url,
+                data: dataParam,
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    moviedata = data;
+                },
+                error: function (data) {
+                    console.log(data.toString());
+                    alert('数据不存在');
+                }
+            });
+            return moviedata["name"];
+        }
+
+        function getMovieId(key) {
+            var search_url = "http://hilosh.xyz:19090/movies/selectMovieByName";
+            key= decodeURI(key);
+            console.log(key);
+            var dataParam = {
+                "name":key
+            };
+            var moviedata;
+            $.post({
+                url: search_url,
+                data: dataParam,
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    moviedata = data;
+                },
+                error: function (data) {
+                    console.log(data.toString());
+                    alert('数据不存在');
+                }
+            });
+            console.log(moviedata[0]);
+            return moviedata[0]["id"];
+        }
+
+        function getnew() {
+            $(".container").remove();
+            $("#" + idname).remove();
+            $(".middle").remove();
+            $(".middle2").remove();
+            $(".container1").remove();
+            $(".container2").remove();
+            $(".container3").remove();
+            $(".container4").remove();
+            var search_url = "http://hilosh.xyz:19090/movies/selectMovieTop";
+            console.log(map);
+            var now;
+            $.post({
+               url: search_url,
+               data:map,
+               async:false,
+               success: function (data) {
+                   now = data;
+                   //console.log(data);
+               },
+                error: function(data) {
+                    console.log("123");
+                    console.log(data.toString());
+                    alert('数据不存在');
+                }
+            });
+            console.log(now);
+
+            var max = 0;
+            var min = 100;
+
+            var strmap;
+            if (tagortext) {
+                strmap = "<div id = 'tagsList'>";
+                $.each(now, function (key, values) {
+                    var name = values["name"];
+                    var id = "id" + values["id"];
+                    strmap += "<a class = \"moviename\" id =\"" + id + "\"href=\"#\"> " + name + " </a>";
+                    console.log(values);
+                });
+                strmap += "</div>";
+                idname = "tagsList";
+                classname = "moviename";
+            } else {
+                strmap = "<div id = 'tagsList2'>";
+                $.each(now, function (key, values) {
+                    if (parseInt(values["relative"]) > max)
+                        max = parseInt(values["relative"]);
+                    if (parseInt(values["relative"]) < min)
+                        min = parseInt(values["relative"]);
+                    var name = values["name"];
+                    var id = "id" + values["id"];
+                    strmap += "    <div class = \"moviename2\" href=\"#\" id =\"" + id + "\">\n" +
+                        "<a href=\"#\" class=\"iconbtn2 fas fa-star\" id =\"i" + id + "\"></a>\n" +
+                        "<input class=\"tag_text2\" href=\"#\"type=\"text\" id = \"ii" + id + "\" disabled=\"disabled\"  value=\"" + name + "\">\n" +
+                        "</div>";
+                    console.log(strmap);
+                });
+                strmap += "</div>";
+                console.log(strmap);
+                console.log(max);
+                idname = "tagsList2";
+                classname = "moviename2";
+            }
+            min++;
+            max++;max++;
+            $("body").append(strmap);
+            if (idname == "tagsList2") {
+                $.each(now, function (key, values) {
+                    var x = parseInt(values["relative"]) + 1;
+                    var nowrel = (15 * x).toString() + "px";
+                    var nowrel2 = (10 * x).toString() + "px";
+                    var nowrel3 = (6 * x).toString() + "px";
+                    var nowrel4 = (4 * x).toString() + "px";
+                    var id = "id" + values["id"];
+                    console.log(nowrel);
+                    $("#" + id).css({
+                        height: nowrel,
+                        "border-radius": nowrel,
+                        padding: nowrel4
+                    });
+                    $("#i" + id).css({
+                        height: nowrel,
+                        width: nowrel,
+                        "font-size": nowrel2
+                    });
+                    $("#ii" + id).css({
+                        "line-height": nowrel,
+                        "font-size": nowrel3
+                    });
+                });
+                $("#iid" + map["movie_id"]).css({
+                    color:"#3498db",
+                   // background: "#ffeaa7"
+                });
+                $("#id" + map["movie_id"]).css({
+                   // background: "#ffeaa7"
+                });
+                $("#iiid" + map["movie_id"]).css({
+                    color:"#2f3640"
+                });
+            }
+            drawstarmap(idname, classname);
+            $(document).on("click", "." + classname,function () {
+                if (tagordetail) {
+                    var temp = $(this).attr("id");
+                    var id = temp.substr(temp.indexOf("d") + 1);
+                    map["movie_id"] = id;
+                    var movieid = id;
+                    getnewhtml();
+                    return;
+                } else {
+                    $("#" + idname).remove();
+                    $(".container1").remove();
+                    $(".container2").remove();
+                    $(".container3").remove();
+                    $(".container4").remove();
+                    var temp = $(this).attr("id");
+                    var id = temp.substr(temp.indexOf("d") + 1);
+                    var search_url = "http://hilosh.xyz:19090/movies/selectMovieById";
+                    var dataParam = {
+                        "id": id
+                    };
+                    var moviedata;
+                    $.post({
+                        url: search_url,
+                        data: dataParam,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            moviedata = data;
+                        },
+                        error: function (data) {
+                            console.log(data.toString());
+                            alert('数据不存在');
+                        }
+                    });
+                    var str = "<div href=\"#\" class=\"container\">" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "</div>";
+                    console.log(str);
+                    console.log(moviedata["img"].toString());
+                    $("body").append(str);
+                    if (moviedata["summary"].length > 120) {
+                        moviedata["summary"] = moviedata["summary"].substring(0, 117) + "...";
+                    }
+                    var actor_one = getActorId(moviedata["actor_one"]);
+                    var actor_two = getActorId(moviedata["actor_two"]);
+                    var director = getActorId(moviedata["director"]);
+                    var author = getActorId(moviedata["author"]);
+                    var strdetail = "<div class=\"middle\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Login\">\n" +
+                        "\t\t\t\t\t<a href=\"#Login\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>电影名/Title</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["name"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Profile\">\n" +
+                        "\t\t\t\t\t<a href=\"#Profile\" class=\"btn\"><i class=\"fas fa-user-ninja\"></i>演员/Actor</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + actor_one + "</p>\n" +
+                        "\t\t\t\t\t\t<p>" + actor_two + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Message\">\n" +
+                        "\t\t\t\t\t<a href=\"#Message\" class=\"btn\"><i class=\"fas fa-user-tie\"></i>导演/Director</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + director + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Setting\">\n" +
+                        "\t\t\t\t\t<a href=\"#Setting\" class=\"btn\"><i class=\"fas fa-user-graduate\"></i>原作者/Original</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + author + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Summary'>\n" +
+                        "\t\t\t\t\t<a href=\"#Summary\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>简介/Summary</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["summary"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                    strdetail = "<div class=\"middle2\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id='Genre'>\n" +
+                        "\t\t\t\t\t<a href=\"#Genre\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>类型/Genre</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["genre"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='RatingSum'>\n" +
+                        "\t\t\t\t\t<a href=\"#RatingSum\" class=\"btn\"><i class=\"fas fa-heartbeat\"></i>评分/RatingSum</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["rating"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Popularity'>\n" +
+                        "\t\t\t\t\t<a href=\"#Popularity\" class=\"btn\"><i class=\"fas fa-fire-alt\"></i>热度/Popularity</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["ratingsum"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Tag'>\n" +
+                        "\t\t\t\t\t<a href=\"#Tag\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>标签/Tag</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["tag"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Year'>\n" +
+                        "\t\t\t\t\t<a href=\"#Year\" class=\"btn\"><i class=\"fas fa-calendar-alt\"></i>年份/Year</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["year"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                }
+            });
+            movie1 = now[0];
+            movie2 = now[1];
+            movie3 = now[2];
+            movie4 = now[3];
+            var str = "<div href=\"#\" class=\"container1\">" +
+                "<img src=\""+movie1["img"] + "\" />" +
+                "<img src=\""+movie1["img"] + "\" />" +
+                "<img src=\""+movie1["img"]+"\" />" +
+                "<img src=\""+movie1["img"]+"\" />" +
+                "</div>";
+            $(document).on("click", ".container1",function () {
+                if (tagordetail) {
+                    map["movie_id"] = movie1["id"];
+                    var movieid = id;
+                    getnewhtml();
+                    return;
+                } else {
+                    $("#" + idname).remove();
+                    $(".container1").remove();
+                    $(".container2").remove();
+                    $(".container3").remove();
+                    $(".container4").remove();
+                    var id = movie1["id"];
+                    var search_url = "http://hilosh.xyz:19090/movies/selectMovieById";
+                    var dataParam = {
+                        "id": id
+                    };
+                    var moviedata;
+                    $.post({
+                        url: search_url,
+                        data: dataParam,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            moviedata = data;
+                        },
+                        error: function (data) {
+                            console.log(data.toString());
+                            alert('数据不存在');
+                        }
+                    });
+                    var str = "<div href=\"#\" class=\"container\">" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "</div>";
+                    console.log(str);
+                    console.log(moviedata["img"].toString());
+                    $("body").append(str);
+                    if (moviedata["summary"].length > 120) {
+                        moviedata["summary"] = moviedata["summary"].substring(0, 117) + "...";
+                    }
+                    var actor_one = getActorId(moviedata["actor_one"]);
+                    var actor_two = getActorId(moviedata["actor_two"]);
+                    var director = getActorId(moviedata["director"]);
+                    var author = getActorId(moviedata["author"]);
+                    var strdetail = "<div class=\"middle\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Login\">\n" +
+                        "\t\t\t\t\t<a href=\"#Login\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>电影名/Title</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["name"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Profile\">\n" +
+                        "\t\t\t\t\t<a href=\"#Profile\" class=\"btn\"><i class=\"fas fa-user-ninja\"></i>演员/Actor</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + actor_one + "</p>\n" +
+                        "\t\t\t\t\t\t<p>" + actor_two + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Message\">\n" +
+                        "\t\t\t\t\t<a href=\"#Message\" class=\"btn\"><i class=\"fas fa-user-tie\"></i>导演/Director</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + director + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Setting\">\n" +
+                        "\t\t\t\t\t<a href=\"#Setting\" class=\"btn\"><i class=\"fas fa-user-graduate\"></i>原作者/Original</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + author + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Summary'>\n" +
+                        "\t\t\t\t\t<a href=\"#Summary\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>简介/Summary</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["summary"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                    strdetail = "<div class=\"middle2\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id='Genre'>\n" +
+                        "\t\t\t\t\t<a href=\"#Genre\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>类型/Genre</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["genre"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='RatingSum'>\n" +
+                        "\t\t\t\t\t<a href=\"#RatingSum\" class=\"btn\"><i class=\"fas fa-heartbeat\"></i>评分/RatingSum</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["rating"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Popularity'>\n" +
+                        "\t\t\t\t\t<a href=\"#Popularity\" class=\"btn\"><i class=\"fas fa-fire-alt\"></i>热度/Popularity</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["ratingsum"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Tag'>\n" +
+                        "\t\t\t\t\t<a href=\"#Tag\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>标签/Tag</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["tag"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Year'>\n" +
+                        "\t\t\t\t\t<a href=\"#Year\" class=\"btn\"><i class=\"fas fa-calendar-alt\"></i>年份/Year</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["year"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                }
+            });
+
+            $("body").append(str);
+            var str = "<div href=\"#\" class=\"container2\">" +
+                "<img src=\""+movie2["img"] + "\" />" +
+                "<img src=\""+movie2["img"] + "\" />" +
+                "<img src=\""+movie2["img"]+"\" />" +
+                "<img src=\""+movie2["img"]+"\" />" +
+                "</div>";
+            $(document).on("click", ".container2",function () {
+                if (tagordetail) {
+                    map["movie_id"] = movie2["id"];
+                    var movieid = id;
+                    getnewhtml();
+                    return;
+                } else {
+                    $("#" + idname).remove();
+                    $(".container1").remove();
+                    $(".container2").remove();
+                    $(".container3").remove();
+                    $(".container4").remove();
+                    var id = movie2["id"];
+                    var search_url = "http://hilosh.xyz:19090/movies/selectMovieById";
+                    var dataParam = {
+                        "id": id
+                    };
+                    var moviedata;
+                    $.post({
+                        url: search_url,
+                        data: dataParam,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            moviedata = data;
+                        },
+                        error: function (data) {
+                            console.log(data.toString());
+                            alert('数据不存在');
+                        }
+                    });
+                    var str = "<div href=\"#\" class=\"container\">" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "</div>";
+                    console.log(str);
+                    console.log(moviedata["img"].toString());
+                    $("body").append(str);
+                    if (moviedata["summary"].length > 120) {
+                        moviedata["summary"] = moviedata["summary"].substring(0, 117) + "...";
+                    }
+                    var actor_one = getActorId(moviedata["actor_one"]);
+                    var actor_two = getActorId(moviedata["actor_two"]);
+                    var director = getActorId(moviedata["director"]);
+                    var author = getActorId(moviedata["author"]);
+                    var strdetail = "<div class=\"middle\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Login\">\n" +
+                        "\t\t\t\t\t<a href=\"#Login\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>电影名/Title</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["name"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Profile\">\n" +
+                        "\t\t\t\t\t<a href=\"#Profile\" class=\"btn\"><i class=\"fas fa-user-ninja\"></i>演员/Actor</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + actor_one + "</p>\n" +
+                        "\t\t\t\t\t\t<p>" + actor_two + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Message\">\n" +
+                        "\t\t\t\t\t<a href=\"#Message\" class=\"btn\"><i class=\"fas fa-user-tie\"></i>导演/Director</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + director + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Setting\">\n" +
+                        "\t\t\t\t\t<a href=\"#Setting\" class=\"btn\"><i class=\"fas fa-user-graduate\"></i>原作者/Original</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + author + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Summary'>\n" +
+                        "\t\t\t\t\t<a href=\"#Summary\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>简介/Summary</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["summary"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                    strdetail = "<div class=\"middle2\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id='Genre'>\n" +
+                        "\t\t\t\t\t<a href=\"#Genre\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>类型/Genre</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["genre"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='RatingSum'>\n" +
+                        "\t\t\t\t\t<a href=\"#RatingSum\" class=\"btn\"><i class=\"fas fa-heartbeat\"></i>评分/RatingSum</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["rating"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Popularity'>\n" +
+                        "\t\t\t\t\t<a href=\"#Popularity\" class=\"btn\"><i class=\"fas fa-fire-alt\"></i>热度/Popularity</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["ratingsum"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Tag'>\n" +
+                        "\t\t\t\t\t<a href=\"#Tag\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>标签/Tag</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["tag"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Year'>\n" +
+                        "\t\t\t\t\t<a href=\"#Year\" class=\"btn\"><i class=\"fas fa-calendar-alt\"></i>年份/Year</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["year"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                }
+            });
+
+            $("body").append(str);
+            var str = "<div href=\"#\" class=\"container3\">" +
+                "<img src=\""+movie3["img"] + "\" />" +
+                "<img src=\""+movie3["img"] + "\" />" +
+                "<img src=\""+movie3["img"]+"\" />" +
+                "<img src=\""+movie3["img"]+"\" />" +
+                "</div>";
+            $(document).on("click", ".container3",function () {
+                if (tagordetail) {
+                    map["movie_id"] = movie3["id"];
+                    var movieid = id;
+                    getnewhtml();
+                    return;
+                } else {
+                    $("#" + idname).remove();
+                    $(".container1").remove();
+                    $(".container2").remove();
+                    $(".container3").remove();
+                    $(".container4").remove();
+                    var id = movie3["id"];
+                    var search_url = "http://hilosh.xyz:19090/movies/selectMovieById";
+                    var dataParam = {
+                        "id": id
+                    };
+                    var moviedata;
+                    $.post({
+                        url: search_url,
+                        data: dataParam,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            moviedata = data;
+                        },
+                        error: function (data) {
+                            console.log(data.toString());
+                            alert('数据不存在');
+                        }
+                    });
+                    var str = "<div href=\"#\" class=\"container\">" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "</div>";
+                    console.log(str);
+                    console.log(moviedata["img"].toString());
+                    $("body").append(str);
+                    if (moviedata["summary"].length > 120) {
+                        moviedata["summary"] = moviedata["summary"].substring(0, 117) + "...";
+                    }
+                    var actor_one = getActorId(moviedata["actor_one"]);
+                    var actor_two = getActorId(moviedata["actor_two"]);
+                    var director = getActorId(moviedata["director"]);
+                    var author = getActorId(moviedata["author"]);
+                    var strdetail = "<div class=\"middle\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Login\">\n" +
+                        "\t\t\t\t\t<a href=\"#Login\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>电影名/Title</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["name"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Profile\">\n" +
+                        "\t\t\t\t\t<a href=\"#Profile\" class=\"btn\"><i class=\"fas fa-user-ninja\"></i>演员/Actor</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + actor_one + "</p>\n" +
+                        "\t\t\t\t\t\t<p>" + actor_two + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Message\">\n" +
+                        "\t\t\t\t\t<a href=\"#Message\" class=\"btn\"><i class=\"fas fa-user-tie\"></i>导演/Director</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + director + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Setting\">\n" +
+                        "\t\t\t\t\t<a href=\"#Setting\" class=\"btn\"><i class=\"fas fa-user-graduate\"></i>原作者/Original</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + author + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Summary'>\n" +
+                        "\t\t\t\t\t<a href=\"#Summary\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>简介/Summary</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["summary"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                    strdetail = "<div class=\"middle2\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id='Genre'>\n" +
+                        "\t\t\t\t\t<a href=\"#Genre\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>类型/Genre</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["genre"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='RatingSum'>\n" +
+                        "\t\t\t\t\t<a href=\"#RatingSum\" class=\"btn\"><i class=\"fas fa-heartbeat\"></i>评分/RatingSum</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["rating"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Popularity'>\n" +
+                        "\t\t\t\t\t<a href=\"#Popularity\" class=\"btn\"><i class=\"fas fa-fire-alt\"></i>热度/Popularity</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["ratingsum"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Tag'>\n" +
+                        "\t\t\t\t\t<a href=\"#Tag\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>标签/Tag</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["tag"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Year'>\n" +
+                        "\t\t\t\t\t<a href=\"#Year\" class=\"btn\"><i class=\"fas fa-calendar-alt\"></i>年份/Year</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["year"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                }
+            });
+
+            $("body").append(str);
+            var str = "<div href=\"#\" class=\"container4\">" +
+                "<img src=\""+movie4["img"] + "\" />" +
+                "<img src=\""+movie4["img"] + "\" />" +
+                "<img src=\""+movie4["img"]+"\" />" +
+                "<img src=\""+movie4["img"]+"\" />" +
+                "</div>";
+            $(document).on("click", ".container4",function () {
+                if (tagordetail) {
+                    map["movie_id"] = movie4["id"];
+                    var movieid = id;
+                    getnewhtml();
+                    return;
+                } else {
+                    $("#" + idname).remove();
+                    $(".container1").remove();
+                    $(".container2").remove();
+                    $(".container3").remove();
+                    $(".container4").remove();
+                    var id = movie4["id"];
+                    var search_url = "http://hilosh.xyz:19090/movies/selectMovieById";
+                    var dataParam = {
+                        "id": id
+                    };
+                    var moviedata;
+                    $.post({
+                        url: search_url,
+                        data: dataParam,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            moviedata = data;
+                        },
+                        error: function (data) {
+                            console.log(data.toString());
+                            alert('数据不存在');
+                        }
+                    });
+                    var str = "<div href=\"#\" class=\"container\">" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "<img src=\"" + moviedata["img"] + "\" />" +
+                        "</div>";
+                    console.log(str);
+                    console.log(moviedata["img"].toString());
+                    $("body").append(str);
+                    if (moviedata["summary"].length > 120) {
+                        moviedata["summary"] = moviedata["summary"].substring(0, 117) + "...";
+                    }
+                    var actor_one = getActorId(moviedata["actor_one"]);
+                    var actor_two = getActorId(moviedata["actor_two"]);
+                    var director = getActorId(moviedata["director"]);
+                    var author = getActorId(moviedata["author"]);
+                    var strdetail = "<div class=\"middle\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Login\">\n" +
+                        "\t\t\t\t\t<a href=\"#Login\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>电影名/Title</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["name"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Profile\">\n" +
+                        "\t\t\t\t\t<a href=\"#Profile\" class=\"btn\"><i class=\"fas fa-user-ninja\"></i>演员/Actor</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + actor_one + "</p>\n" +
+                        "\t\t\t\t\t\t<p>" + actor_two + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Message\">\n" +
+                        "\t\t\t\t\t<a href=\"#Message\" class=\"btn\"><i class=\"fas fa-user-tie\"></i>导演/Director</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + director + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id=\"Setting\">\n" +
+                        "\t\t\t\t\t<a href=\"#Setting\" class=\"btn\"><i class=\"fas fa-user-graduate\"></i>原作者/Original</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + author + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Summary'>\n" +
+                        "\t\t\t\t\t<a href=\"#Summary\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>简介/Summary</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["summary"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                    strdetail = "<div class=\"middle2\">\n" +
+                        "\t\t\t<div class=\"menu\">\n" +
+                        "\t\t\t\t<li class=\"item\" id='Genre'>\n" +
+                        "\t\t\t\t\t<a href=\"#Genre\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>类型/Genre</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["genre"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='RatingSum'>\n" +
+                        "\t\t\t\t\t<a href=\"#RatingSum\" class=\"btn\"><i class=\"fas fa-heartbeat\"></i>评分/RatingSum</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["rating"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Popularity'>\n" +
+                        "\t\t\t\t\t<a href=\"#Popularity\" class=\"btn\"><i class=\"fas fa-fire-alt\"></i>热度/Popularity</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["ratingsum"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Tag'>\n" +
+                        "\t\t\t\t\t<a href=\"#Tag\" class=\"btn\"><i class=\"fas fa-sign-out-alt\"></i>标签/Tag</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["tag"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t\t<li class=\"item\" id='Year'>\n" +
+                        "\t\t\t\t\t<a href=\"#Year\" class=\"btn\"><i class=\"fas fa-calendar-alt\"></i>年份/Year</a>\n" +
+                        "\t\t\t\t\t<div class=\"smenu\">\n" +
+                        "\t\t\t\t\t\t<p>" + moviedata["year"] + "</p>\n" +
+                        "\t\t\t\t\t</div>\n" +
+                        "\t\t\t\t</li>\n" +
+                        "\t\t\t</div>\n" +
+                        "\t\t</div>";
+                    $("body").append(strdetail);
+                }
+            });
+            $("body").append(str);
+            console.log(movie1);
+            console.log(movie2);
+            console.log(movie3);
+            return;
+        }
+
+
+
+        $(document).ready(function () {
+            var url = window.location.search;
+            console.log("url", url);
+            var str = url.split("=");
+            console.log(str);
+            var temp = 0;
+            $.each(map,function (key, values) {
+                temp++;
+                if (temp < 11) {
+                    map[key] = str[temp];
+                    if (temp > 1) {
+                        if (str[temp] == "1") {
+                            $("#" + key).css({
+                                background: "#ffffff",
+                                color: "#060e1b"
+                            });
+                        } else {
+                            $("#" + key).css({
+                                background: "#060e1b",
+                                color: "#ffffff"
+                            });
+                        }
+                    }
+                }
+            });
+            if (str[11] == "0")
+                    tagortext = false;
+                else
+                    tagortext = true;
+            if (str[12] == "0")
+                    tagordetail = false;
+                else
+                    tagordetail = true;
+            console.log(map);
+            if (!(map["movie_id"][0] >= '0' && map["movie_id"][0] <= '9')) {
+                map["movie_id"] = getMovieId(map["movie_id"]);
+            }
+
+            if (!tagortext) {
+                $("#changetext").remove();
+                var str = "<div class = \"changetext\" id = \"changetext\">\n" +
+                    "    <a class = \"changebtn\" href=\"#\" id = \"changebtn\">\n" +
+                    "        <i class=\"fas fa-star changeicon\"></i>\n" +
+                    "    </a>\n" +
+                    "</div>";
+                $("body").append(str);
+                tagortext = false;
+            } else {
+                $("#changetext").remove();
+                var str = "<div class = \"changetext\" id = \"changetext\">\n" +
+                    "    <a class = \"changebtn\" href=\"#\" id = \"changebtn\">\n" +
+                    "        <i class=\"fas fa-tags changeicon\"></i>\n" +
+                    "    </a>\n" +
+                    "</div>";
+                $("body").append(str);
+                tagortext = true;
+            }
+
+            if (!tagordetail) {
+                $("#detail").remove();
+                var str = "<div class = \"detail\" id = \"detail\">\n" +
+                    "    <a class = \"detailbtn\" href=\"#\" id = \"detailbtn\">\n" +
+                    "        <i class=\"fas fa-file-video detailicon\"></i>\n" +
+                    "    </a>\n" +
+                    "</div>";
+                $("body").append(str);
+                tagordetail = false;
+            } else {
+                $("#detail").remove();
+                var str = "<div class = \"detail\" id = \"detail\">\n" +
+                    "    <a class = \"detailbtn\" href=\"#\" id = \"detailbtn\">\n" +
+                    "        <i class=\"fas fa-globe detailicon\"></i>\n" +
+                    "    </a>\n" +
+                    "</div>";
+                $("body").append(str);
+                tagordetail = true;
+            }
+            //searchData(temp);
+            getnew();
+
+            $("#tagbtn").click(function () {
+                getnewhtml();
+            });
+
+            $(document).on("click", "#changetext",function () {
+                if (tagortext) {
+                    $("#changetext").remove();
+                    var str = "<div class = \"changetext\" id = \"changetext\">\n" +
+                        "    <a class = \"changebtn\" href=\"#\" id = \"changebtn\">\n" +
+                        "        <i class=\"fas fa-star changeicon\"></i>\n" +
+                        "    </a>\n" +
+                        "</div>";
+                    $("body").append(str);
+                    tagortext = false;
+                } else {
+                    $("#changetext").remove();
+                    var str = "<div class = \"changetext\" id = \"changetext\">\n" +
+                        "    <a class = \"changebtn\" href=\"#\" id = \"changebtn\">\n" +
+                        "        <i class=\"fas fa-tags changeicon\"></i>\n" +
+                        "    </a>\n" +
+                        "</div>";
+                    $("body").append(str);
+                    tagortext = true;
+                }
+                getnewhtml();
+            });
+
+            $(document).on("click", "#detail",function () {
+                if (tagordetail) {
+                    $("#detail").remove();
+                    var str = "<div class = \"detail\" id = \"detail\">\n" +
+                        "    <a class = \"detailbtn\" href=\"#\" id = \"detailbtn\">\n" +
+                        "        <i class=\"fas fa-file-video detailicon\"></i>\n" +
+                        "    </a>\n" +
+                        "</div>";
+                    $("body").append(str);
+                    tagordetail = false;
+                } else {
+                    $("#detail").remove();
+                    var str = "<div class = \"detail\" id = \"detail\">\n" +
+                        "    <a class = \"detailbtn\" href=\"#\" id = \"detailbtn\">\n" +
+                        "        <i class=\"fas fa-globe detailicon\"></i>\n" +
+                        "    </a>\n" +
+                        "</div>";
+                    $("body").append(str);
+                    tagordetail = true;
+                }
+                getnewhtml();
+            });
+
+            $(".tag").click(function () {
+                var temp = $(this).children("a").attr("id");
+                $.each(map,function (key,values) {
+                     console.log(key);
+                    if (temp == key.toString()) {
+                        if (values == "0") {
+                            map[key] = "1";
+                            $("#" + temp).css({
+                                background: "#ffffff",
+                                color: "#060e1b"
+                            });
+                        } else {
+                            $("#" + temp).css({
+                                background: "#060e1b",
+                                color: "#ffffff"
+                            });
+                            map[key] = "0";
+                        }
+                    }
+                });
+                getnewhtml();
+            });
+
+            $("#search-btn").click(function () {
+                map["movie_id"] = $("input[id = 'search-txt']").val();
+           //     $("input[id = 'search-txt']").val("");
+                if (!(map["movie_id"][0] >= '0' && map["movie_id"][0] <= '9')) {
+                    map["movie_id"] = getMovieId(map["movie_id"]);
+                }
+                getnewhtml();
+            });
+        });
+    </script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    "use strict";
+    var canvas = document.getElementById('canvas'),
+        ctx = canvas.getContext('2d'),
+        w = canvas.width = window.innerWidth,
+        h = canvas.height = window.innerHeight,
+        hue = 217,
+        stars = [],
+        count = 0,
+        maxStars = 1200;
+    var canvas2 = document.createElement('canvas'), //创建画布对象
+        ctx2 = canvas2.getContext('2d'); // 二维
+    canvas2.width = 100;
+    canvas2.height = 100;
+    var half = canvas2.width / 2,
+        gradient2 = ctx2.createRadialGradient(half, half, 0, half, half, half);
+    gradient2.addColorStop(0.025, '#fff');
+    gradient2.addColorStop(0.1, 'hsl(' + hue + ', 61%, 33%)');
+    gradient2.addColorStop(0.25, 'hsl(' + hue + ', 64%, 6%)');
+    gradient2.addColorStop(1, 'transparent');
+    ctx2.fillStyle = gradient2;
+    ctx2.beginPath();
+    ctx2.arc(half, half, half, 0, Math.PI * 2);
+    ctx2.fill();
+    function random(min, max) {
+        if (arguments.length < 2) {
+            max = min;
+            min = 0;
+        }
+        if (min > max) {
+            var hold = max;
+            max = min;
+            min = hold;
+        }
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function maxOrbit(x, y) {
+        var max = Math.max(x, y),
+            diameter = Math.round(Math.sqrt(max * max + max * max));
+        return diameter / 2;
+    }
+    var Star = function() {
+        this.orbitRadius = random(maxOrbit(w, h));
+        this.radius = random(60, this.orbitRadius) / 12;
+        this.orbitX = w / 2;
+        this.orbitY = h / 2;
+        this.timePassed = random(0, maxStars);
+        this.speed = random(this.orbitRadius) / 900000;
+        this.alpha = random(2, 10) / 10;
+        count++;
+        stars[count] = this;
+    }
+    Star.prototype.draw = function() {
+        var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
+            y = Math.cos(this.timePassed) * this.orbitRadius + this.orbitY,
+            twinkle = random(10);
+        if (twinkle === 1 && this.alpha > 0) {
+            this.alpha -= 0.05;
+        } else if (twinkle === 2 && this.alpha < 1) {
+            this.alpha += 0.05;
+        }
+        ctx.globalAlpha = this.alpha;
+        ctx.drawImage(canvas2, x - this.radius / 2, y - this.radius / 2, this.radius, this.radius);
+        this.timePassed += this.speed;
+    }
+    for (var i = 0; i < maxStars; i++) {
+        new Star();
+    }
+    function animation() {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = 'hsla(' + hue + ', 64%, 6%, 1)';
+        ctx.fillRect(0, 0, w, h)
+        ctx.globalCompositeOperation = 'lighter';
+        for (var i = 1, l = stars.length; i < l; i++) {
+            stars[i].draw();
+        };
+        window.requestAnimationFrame(animation);
+    }
+    animation();
+</script>
+<section class="checkbox">
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-user-ninja" id = "actor_one"></a>
+        <input href="#"class="tag_text" type="text" id = "text_actor_one" disabled="disabled"  value="演员一">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-user-secret" id = "actor_two"></a>
+        <input href="#"class="tag_text" type="text" id = "text_actor_two" disabled="disabled"  value="演员二">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-user-graduate" id = "author"></a>
+        <input href="#"class="tag_text" type="text" id = "text_author" disabled="disabled"  value="原作者">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-globe-americas" id = "country"></a>
+        <input href="#"class="tag_text" type="text" id = "text_country" disabled="disabled"  value="地区">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-user-tie" id = "director"></a>
+        <input href="#"class="tag_text" type="text" id = "text_director" disabled="disabled"  value="导演">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-sitemap" id = "genre"></a>
+        <input href="#"class="tag_text" type="text" id = "text_genre" disabled="disabled"  value="类型">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-heartbeat" id = "rating"></a>
+        <input href="#"class="tag_text" type="text" id = "text_rating" disabled="disabled"  value="评分">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-fire-alt" id = "ratingsum"></a>
+        <input href="#"class="tag_text" type="text" id = "text_ratingsum" disabled="disabled"  value="热度">
+    </div>
+    <div class = "tag"href="#" >
+        <a href="#" class="iconbtn fas fa-calendar-alt" id = "year"></a>
+        <input href="#"class="tag_text" type="text" id = "text_year" disabled="disabled"  value="年份">
+    </div>
+</section>
+
+<div class="search-box" id = "search-box">
+    <input class="search-txt" type="text" placeholder="Type to search" id = "search-txt"/>
+        <a class="search-btn" href="#" id = "search-btn">
+    </a>
+
+</div>
+<div class = "back-box" id = "back-box">
+    <a class = "back-btn" href = "main.html" id = "back-btn">
+        <i class="fas fa-chevron-circle-left back-icon"></i>
+    </a>
+</div>
+<div class = "tagtotext" id = "tagtotext">
+    <a class = "tagbtn" href="#" id = "tagbtn">
+        <i class="fas fa-sync-alt tagicon"></i>
+    </a>
+</div>
+<div class = "changetext" id = "changetext">
+    <a class = "changebtn" href="#" id = "changebtn">
+        <i class="fas fa-star changeicon"></i>
+    </a>
+</div>
+<div class = "detail" id = "detail">
+    <a class = "detailbtn" href="#" id = "detailbtn">
+        <i class="fas fa-file-video detailicon"></i>
+    </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,357 @@
+.container1 {
+    z-index: 110;
+    position: absolute;
+    top: 2%;
+    left: 3%;
+    width: 250px;
+    height: 375px;
+    background: rgba(0, 0, 0, 0.1);
+    transform: rotate(0deg) skew(0deg) scale(0.8);
+    transition: 0.5s;
+}
+.container1 img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: 0.4s;
+}
+.container1:hover img:nth-child(4) {
+    transform: translate(30px, 30px);
+    opacity: 1;
+}
+.container1:hover img:nth-child(3) {
+    transform: translate(-30px, -30px);
+    opacity: 0.8;
+}
+.container1:hover img:nth-child(2) {
+    transform: translate(-30px, 30px);
+    opacity: 0.6;
+}
+.container1:hover img:nth-child(1) {
+    transform: translate(30px, -30px);
+    opacity: 0.4;
+}
+
+.container2 {
+    z-index: 110;
+    position: absolute;
+    top: 7.05%;
+    left:19%;
+    width: 220px;
+    height: 330px;
+    background: rgba(0, 0, 0, 0.1);
+    transform: rotate(0deg) skew(0deg) scale(0.8);
+    transition: 0.5s;
+}
+.container2 img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: 0.4s;
+}
+.container2:hover img:nth-child(4) {
+    transform: translate(30px, 30px);
+    opacity: 1;
+}
+.container2:hover img:nth-child(3) {
+    transform: translate(-30px, -30px);
+    opacity: 0.8;
+}
+.container2:hover img:nth-child(2) {
+    transform: translate(-30px, 30px);
+    opacity: 0.6;
+}
+.container2:hover img:nth-child(1) {
+    transform: translate(30px, -30px);
+    opacity: 0.4;
+}
+
+.container3 {
+    z-index: 110;
+    position: absolute;
+    top: 47%;
+    left:11.3%;
+    width: 190px;
+    height: 285px;
+    background: rgba(0, 0, 0, 0.1);
+    transform: rotate(0deg) skew(0deg) scale(0.8);
+    transition: 0.5s;
+}
+.container3 img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: 0.4s;
+}
+.container3:hover img:nth-child(4) {
+    transform: translate(30px, 30px);
+    opacity: 1;
+}
+.container3:hover img:nth-child(3) {
+    transform: translate(-30px, -30px);
+    opacity: 0.8;
+}
+.container3:hover img:nth-child(2) {
+    transform: translate(-30px, 30px);
+    opacity: 0.6;
+}
+.container3:hover img:nth-child(1) {
+    transform: translate(30px, -30px);
+    opacity: 0.4;
+}
+
+.container4 {
+    z-index: 110;
+    position: absolute;
+    top: 47.5%;
+    left:25%;
+    width: 160px;
+    height: 240px;
+    background: rgba(0, 0, 0, 0.1);
+    transform: rotate(0deg) skew(0deg) scale(0.8);
+    transition: 0.5s;
+}
+.container4 img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: 0.4s;
+}
+.container4:hover img:nth-child(4) {
+    transform: translate(30px, 30px);
+    opacity: 1;
+}
+.container4:hover img:nth-child(3) {
+    transform: translate(-30px, -30px);
+    opacity: 0.8;
+}
+.container4:hover img:nth-child(2) {
+    transform: translate(-30px, 30px);
+    opacity: 0.6;
+}
+.container4:hover img:nth-child(1) {
+    transform: translate(30px, -30px);
+    opacity: 0.4;
+}
+
+
+#tagbtn {
+    position: absolute;
+    bottom: 20%;
+    right: 4%;
+    z-index: 110;
+}
+
+.tagicon{
+    font-size:60px;
+    color: #3867d6;
+    opacity: 0.3;
+    transition: 1s;
+}
+
+.tagbtn:hover > .tagicon {
+    color:white;
+    opacity: 1;
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+}
+
+#changebtn {
+    position: absolute;
+    bottom: 35%;
+    right: 4%;
+    z-index: 110;
+}
+
+.changeicon{
+    font-size:60px;
+    color: #3867d6;
+    opacity: 0.3;
+    transition: 1s;
+}
+
+.changebtn:hover > .changeicon {
+    color:white;
+    opacity: 1;
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+}
+
+#detailbtn {
+    position: absolute;
+    bottom: 50%;
+    right: 4%;
+    z-index: 110;
+}
+
+.detailicon{
+    font-size:60px;
+    color: #3867d6;
+    opacity: 0.3;
+    transition: 1s;
+}
+
+.detailbtn:hover > .detailicon {
+    color:white;
+    opacity: 1;
+    transform: rotate(-360deg);
+    -webkit-transform: rotate(-360deg);
+    -moz-transform: rotate(-360deg);
+    -o-transform: rotate(-360deg);
+    -ms-transform: rotate(-360deg);
+}
+
+/* 用box的伪元素添加一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container1::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -1;
+}
+/* 于上面类似,做一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container1::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -2;
+    /* 滤镜属性  给图像设置高斯模糊。"radius"一值设定高斯函数的标准差，或者是屏幕上以多少像素融在一起，所以值越大越模糊；如果没有设定值，则默认是0；这个参数可设置css长度值，但不接受百分比值。 */
+    filter: blur(40px);
+}
+.container1::before,
+.container1::after {
+    /* linear-gradient() 函数用于创建一个线性渐变的 "图像"。 参数1:用角度值指定渐变的方向（或角度）  12点钟方向为0deg*/
+    background: linear-gradient(235deg, #89ff00, #060c21, #00bcd4);
+}
+
+/* 用box的伪元素添加一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -1;
+}
+/* 于上面类似,做一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -2;
+    /* 滤镜属性  给图像设置高斯模糊。"radius"一值设定高斯函数的标准差，或者是屏幕上以多少像素融在一起，所以值越大越模糊；如果没有设定值，则默认是0；这个参数可设置css长度值，但不接受百分比值。 */
+    filter: blur(40px);
+}
+.container::before,
+.container::after {
+    /* linear-gradient() 函数用于创建一个线性渐变的 "图像"。 参数1:用角度值指定渐变的方向（或角度）  12点钟方向为0deg*/
+    background: linear-gradient(235deg, #89ff00, #060c21, #00bcd4);
+}
+
+/* 用box的伪元素添加一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container2::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -1;
+}
+/* 于上面类似,做一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container2::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -2;
+    /* 滤镜属性  给图像设置高斯模糊。"radius"一值设定高斯函数的标准差，或者是屏幕上以多少像素融在一起，所以值越大越模糊；如果没有设定值，则默认是0；这个参数可设置css长度值，但不接受百分比值。 */
+    filter: blur(40px);
+}
+.container2::before,
+.container2::after {
+    /* linear-gradient() 函数用于创建一个线性渐变的 "图像"。 参数1:用角度值指定渐变的方向（或角度）  12点钟方向为0deg*/
+    background: linear-gradient(235deg, #89ff00, #060c21, #00bcd4);
+}
+
+/* 用box的伪元素添加一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container3::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -1;
+}
+/* 于上面类似,做一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container3::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -2;
+    /* 滤镜属性  给图像设置高斯模糊。"radius"一值设定高斯函数的标准差，或者是屏幕上以多少像素融在一起，所以值越大越模糊；如果没有设定值，则默认是0；这个参数可设置css长度值，但不接受百分比值。 */
+    filter: blur(40px);
+}
+.container3::before,
+.container3::after {
+    /* linear-gradient() 函数用于创建一个线性渐变的 "图像"。 参数1:用角度值指定渐变的方向（或角度）  12点钟方向为0deg*/
+    background: linear-gradient(235deg, #89ff00, #060c21, #00bcd4);
+}
+/* 用box的伪元素添加一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container4::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -1;
+}
+/* 于上面类似,做一个面积比box略大的矩形,并通过改变层叠次序,置于box的下层,达到给box设置边框的效果 */
+.container4::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: #fff;
+    z-index: -2;
+    /* 滤镜属性  给图像设置高斯模糊。"radius"一值设定高斯函数的标准差，或者是屏幕上以多少像素融在一起，所以值越大越模糊；如果没有设定值，则默认是0；这个参数可设置css长度值，但不接受百分比值。 */
+    filter: blur(40px);
+}
+.container4::before,
+.container4::after {
+    /* linear-gradient() 函数用于创建一个线性渐变的 "图像"。 参数1:用角度值指定渐变的方向（或角度）  12点钟方向为0deg*/
+    background: linear-gradient(235deg, #89ff00, #060c21, #00bcd4);
+}
